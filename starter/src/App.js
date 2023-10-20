@@ -1,9 +1,10 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import * as BooksApi from './BooksAPI.js';
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 function App() {
-  const [showSearchPage, setShowSearchpage] = useState(false);
+  const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [isUpdated, setIsUpdated] = useState(false);
 
@@ -20,67 +21,77 @@ function App() {
   const updateBook = (book, shelf) => {
     BooksApi.update(book, shelf);
     setIsUpdated(true);
+
+    navigate("/");
   }
 
   return (
-    <div className="app">
-      {showSearchPage ? (
-        <div className="search-books">
-          <div className="search-books-bar">
-            <a
-              className="close-search"
-              onClick={() => setShowSearchpage(!showSearchPage)}
-            >
-              Close
-            </a>
-            <div className="search-books-input-wrapper">
-              <input
-                type="text"
-                placeholder="Search by title, author, or ISBN"
-              />
+    <Routes>
+      <Route
+        exact
+        path="/"
+        element={<div className="list-books">
+        <div className="list-books-title">
+          <h1>MyReads</h1>
+        </div>
+        <div className="list-books-content">
+          <div>
+            <div className="bookshelf">
+              <h2 className="bookshelf-title">Currently Reading</h2>
+              <div className="bookshelf-books">
+                <ol className="books-grid">
+                  {books.filter((book) => book.shelf === 'currentlyReading').map((book) => (
+                      <BookCard book={book} handleUpdate={updateBook}/>
+                  ))}
+                </ol>
+              </div>
+              <h2 className="bookshelf-title">Want to read</h2>
+                <ol className="books-grid">
+                  {books.filter((book) => book.shelf === 'wantToRead').map((book) => (
+                      <BookCard book={book} handleUpdate={updateBook}/>
+                  ))}
+                </ol>
+              <h2 className="bookshelf-title">Read</h2>
+                <ol className="books-grid">
+                  {books.filter((book) => book.shelf === 'read').map((book) => (
+                      <BookCard book={book} handleUpdate={updateBook}/>
+                  ))}
+                </ol>
             </div>
           </div>
-          <div className="search-books-results">
-            <ol className="books-grid"></ol>
-          </div>
         </div>
-      ) : (
-        <div className="list-books">
-          <div className="list-books-title">
-            <h1>MyReads</h1>
-          </div>
-          <div className="list-books-content">
-            <div>
-              <div className="bookshelf">
-                <h2 className="bookshelf-title">Currently Reading</h2>
-                <div className="bookshelf-books">
-                  <ol className="books-grid">
-                    {books.filter((book) => book.shelf === 'currentlyReading').map((book) => (
-                        <BookCard book={book} handleUpdate={updateBook}/>
-                    ))}
-                  </ol>
-                </div>
-                <h2 className="bookshelf-title">Want to read</h2>
-                  <ol className="books-grid">
-                    {books.filter((book) => book.shelf === 'wantToRead').map((book) => (
-                        <BookCard book={book} handleUpdate={updateBook}/>
-                    ))}
-                  </ol>
-                <h2 className="bookshelf-title">Read</h2>
-                  <ol className="books-grid">
-                    {books.filter((book) => book.shelf === 'read').map((book) => (
-                        <BookCard book={book} handleUpdate={updateBook}/>
-                    ))}
-                  </ol>
+        <div className="open-search">
+          <a onClick={() => navigate("/search")}>Add a book</a>
+        </div>
+      </div>
+        }
+      />
+      <Route
+        path="/search"
+        element={
+          <div className="search-books">
+            <div className="search-books-bar">
+              <a
+                className="close-search"
+                onClick={() => navigate("/")}
+              >
+                Close
+              </a>
+              <div className="search-books-input-wrapper">
+                <input
+                  type="text"
+                  placeholder="Search by title, author, or ISBN"
+                />
               </div>
             </div>
+            <div className="search-books-results">
+              <ol className="books-grid"></ol>
+            </div>
           </div>
-          <div className="open-search">
-            <a onClick={() => setShowSearchpage(!showSearchPage)}>Add a book</a>
-          </div>
-        </div>
-      )}
-    </div>
+        }
+      />
+    </Routes>
+
   );
 }
 
