@@ -5,6 +5,7 @@ import * as BooksApi from './BooksAPI.js';
 function App() {
   const [showSearchPage, setShowSearchpage] = useState(false);
   const [books, setBooks] = useState([]);
+  const [isUpdated, setIsUpdated] = useState(false);
 
   useEffect(()=> {
     const getBooks = async () => {
@@ -13,9 +14,13 @@ function App() {
     };
 
     getBooks();
-  }, [])
+    setIsUpdated(false);
+  }, [isUpdated])
 
-  console.log(books)
+  const updateBook = (book, shelf) => {
+    BooksApi.update(book, shelf);
+    setIsUpdated(true);
+  }
 
   return (
     <div className="app">
@@ -51,20 +56,20 @@ function App() {
                 <div className="bookshelf-books">
                   <ol className="books-grid">
                     {books.filter((book) => book.shelf === 'currentlyReading').map((book) => (
-                        <BookCard book={book}/>
+                        <BookCard book={book} handleUpdate={updateBook}/>
                     ))}
                   </ol>
                 </div>
                 <h2 className="bookshelf-title">Want to read</h2>
                   <ol className="books-grid">
                     {books.filter((book) => book.shelf === 'wantToRead').map((book) => (
-                        <BookCard book={book}/>
+                        <BookCard book={book} handleUpdate={updateBook}/>
                     ))}
                   </ol>
                 <h2 className="bookshelf-title">Read</h2>
                   <ol className="books-grid">
                     {books.filter((book) => book.shelf === 'read').map((book) => (
-                        <BookCard book={book}/>
+                        <BookCard book={book} handleUpdate={updateBook}/>
                     ))}
                   </ol>
               </div>
@@ -81,7 +86,9 @@ function App() {
 
 export default App;
 
-function BookCard({book}) {
+function BookCard({book, handleUpdate}) {
+
+
   return (
   <div className="book">
     <div className="book-top">
@@ -100,7 +107,9 @@ function BookCard({book}) {
         }}></img>
       </div>
       <div className="book-shelf-changer">
-        <select>
+        <select value={book.shelf} onChange={(e) => {
+          handleUpdate(book, e.target.value);
+        }}>
           <option value="none" disabled>
             Move to...
           </option>
