@@ -10,7 +10,7 @@ function App() {
 
   useEffect(()=> {
     const getBooks = async () => {
-      const res = await BooksApi.getAll();
+      const res = await BooksApi.getAll().then();
       setBooks(res);
     };
 
@@ -19,10 +19,12 @@ function App() {
   }, [isUpdated])
 
   const updateBook = (book, shelf) => {
-    BooksApi.update(book, shelf);
-    setIsUpdated(true);
+    const updateBook = async () => {
+      await BooksApi.update(book, shelf).then(()=>
+        setIsUpdated(true));
+    };
 
-    navigate("/");
+    updateBook();
   }
 
   return (
