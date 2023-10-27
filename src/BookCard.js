@@ -1,6 +1,17 @@
 
+import { useNavigate } from "react-router-dom";
+import * as BooksApi from './BooksAPI.js';
 
-export const BookCard = ({book, handleUpdate}) => {
+
+export const BookCard = ({book, setIsUpdated}) => {
+  const navigate = useNavigate();
+
+  const handleUpdate = (book, shelf) => {
+    BooksApi.update(book, shelf).then(() => setIsUpdated(true));
+
+    navigate("/")
+  }
+
   return (
   <div className="book">
     <div className="book-top">
