@@ -2,11 +2,13 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import * as BooksApi from './BooksAPI.js';
 import { Route, Routes, useNavigate } from "react-router-dom";
+import {BookCard} from './BookCard';
 
 function App() {
   const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [isUpdated, setIsUpdated] = useState(false);
+  const [query, setQuery] = useState("");
 
   useEffect(()=> {
     const getBooks = async () => {
@@ -25,6 +27,7 @@ function App() {
     };
 
     updateBook();
+    navigate("/")
   }
 
   return (
@@ -62,8 +65,8 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="open-search">
-          <a onClick={() => navigate("/search")}>Add a book</a>
+        <div className="open-search cursor-pointer">
+          <a className="cursor-pointer" onClick={() => navigate("/search")}>Add a book</a>
         </div>
       </div>
         }
@@ -83,11 +86,17 @@ function App() {
                 <input
                   type="text"
                   placeholder="Search by title, author, or ISBN"
+                  onChange={(e)=> {
+                    setQuery(e.target.value.toLowerCase());
+                  }}
                 />
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              <ol className="books-grid">
+                {books.filter((book) => book.title.toLowerCase().match(query) || book.authors.join().toLowerCase().match(query) || book.industryIdentifiers.map((identifier) => { return identifier.type === 'ISBN_10' ? identifier.identifier : ''}).join().toLowerCase().match(query)).map((book) => (
+                    <BookCard book={book} handleUpdate={updateBook}/>
+                ))}</ol>
             </div>
           </div>
         }
@@ -99,45 +108,3 @@ function App() {
 
 export default App;
 
-function BookCard({book, handleUpdate}) {
-
-
-  return (
-  <div className="book">
-    <div className="book-top">
-      <div
-        className="book-cover"
-        style={{
-          width: 128,
-          height: 192,
-        }}
-      >
-        <img src={book['imageLinks'].thumbnail} alt={book.title}
-        style={{
-          width: 128,
-          height: 192,
-          objectFit: 'cover',
-        }}></img>
-      </div>
-      <div className="book-shelf-changer">
-        <select value={book.shelf} onChange={(e) => {
-          handleUpdate(book, e.target.value);
-        }}>
-          <option value="none" disabled>
-            Move to...
-          </option>
-          <option value="currentlyReading">
-            Currently Reading
-          </option>
-          <option value="wantToRead">Want to Read</option>
-          <option value="read">Read</option>
-          <option value="none">None</option>
-        </select>
-      </div>
-    </div>
-    <div className="book-title">
-      {book.title}
-    </div>
-    <div className="book-authors">{book.authors}</div>
-  </div>)
-}
