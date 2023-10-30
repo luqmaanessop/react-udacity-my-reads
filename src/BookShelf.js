@@ -1,4 +1,5 @@
-import { BookCard } from "./BookCard"
+import { BookCard } from "./BookCard";
+import PropTypes from "prop-types";
 
 export const BookShelf = ({books, setIsUpdated}) => {
 
@@ -39,3 +40,8 @@ export const BookShelf = ({books, setIsUpdated}) => {
       </div>
   )
 }
+
+BookShelf.propTypes = {
+  books: PropTypes.array.isRequired,
+  setIsUpdated: PropTypes.func.isRequired,
+};

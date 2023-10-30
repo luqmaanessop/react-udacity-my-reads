@@ -53,7 +53,7 @@ body,
   right: 25px;
   bottom: 25px;
 }
-.open-search button {
+a.open-search {
   display: block;
   border: 0;
   width: 50px;

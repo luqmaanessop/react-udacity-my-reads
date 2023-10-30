@@ -1,6 +1,5 @@
 import * as BooksApi from './BooksAPI.js';
 
-
 export const BookCard = ({book, setIsUpdated}) => {
   const handleUpdate = (book, shelf) => {
     // Invalidate UI after updating a book to cause a re-render

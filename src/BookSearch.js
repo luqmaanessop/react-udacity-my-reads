@@ -1,11 +1,10 @@
-import { useNavigate } from "react-router-dom";
 import { BookCard } from "./BookCard";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import * as BooksApi from './BooksAPI.js';
 
 
 export const BookSearch = ({setIsUpdated, books}) => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [grandLibrary, setGrandLibrary] = useState([]);
@@ -52,7 +51,7 @@ export const BookSearch = ({setIsUpdated, books}) => {
             setGrandLibrary([])
           }
         })}
-    , 500);
+    , 1000);
 
     setDebouncedSearchTerm(debounceTimeout);
   };
@@ -60,12 +59,12 @@ export const BookSearch = ({setIsUpdated, books}) => {
   return (
     <div className="search-books">
     <div className="search-books-bar">
-      <button
+      <Link
+        to="/"
         className="close-search"
-        onClick={() => navigate("/")}
       >
         Close
-      </button>
+      </Link>
       <div className="search-books-input-wrapper">
         <input
           value={searchTerm}
@@ -84,5 +83,4 @@ export const BookSearch = ({setIsUpdated, books}) => {
     </div>
   </div>
   )
-
 }

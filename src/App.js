@@ -4,9 +4,9 @@ import * as BooksApi from './BooksAPI.js';
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { BookSearch } from './BookSearch';
 import { BookShelf } from "./BookShelf";
+import { Link } from "react-router-dom";
 
 function App() {
-  const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [isUpdated, setIsUpdated] = useState(false);
 
@@ -26,9 +26,7 @@ function App() {
         element={
           <>
             <BookShelf books={books} setIsUpdated={setIsUpdated}/>
-            <div className="open-search">
-              <button onClick={() => navigate("/search")}>Add a book</button>
-            </div>
+            <Link className="open-search" to="/search">Open search</Link>
           </>
         }
       />
