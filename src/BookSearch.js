@@ -1,13 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import { BookCard } from "./BookCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as BooksApi from './BooksAPI.js';
 
-export const BookSearch = ({setIsUpdated}) => {
+
+export const BookSearch = ({setIsUpdated, books}) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-  const [grandLibrary, setGrandLibrary] = useState([])
+  const [grandLibrary, setGrandLibrary] = useState([]);
+  const [isMounted, setIsMounted] = useState(true);
+
+  useEffect(() => {
+    return () => {
+      // Cleanup function to set isMounted to false when the component is unmounted
+      setIsMounted(false);
+    };
+  }, []);
 
   const handleOnChange = (e) => {
     setSearchTerm(e.target.value);
@@ -16,7 +25,29 @@ export const BookSearch = ({setIsUpdated}) => {
     // Set a timeout to call the API after 500 milliseconds of user inactivity
     const debounceTimeout = setTimeout(() => {
       setDebouncedSearchTerm(e.target.value.toLowerCase());
-      BooksApi.search(e.target.value.toLowerCase(), 10000).then((res) => setGrandLibrary(res));
+
+      // Call the search function of the API - then check if any of the current books matches and update their current shelf value
+      { isMounted && BooksApi.search(e.target.value.toLowerCase(), 10000).then((res) => {
+        const updatedSearchResults = res.map((searchResultBook) => {
+          const foundBook = books.find((book) => searchResultBook.id === book.id);
+
+          if (foundBook) {
+            // If the book is found, update the shelf
+            return {
+              ...searchResultBook,
+              shelf: foundBook.shelf,
+            };
+          } else {
+            // If the book is not found, set the shelf to 'none'
+            return {
+              ...searchResultBook,
+              shelf: 'none',
+            };
+          }
+        });
+        setGrandLibrary(updatedSearchResults)
+      }
+      )};
     }, 500);
 
     setDebouncedSearchTerm(debounceTimeout);
@@ -25,12 +56,12 @@ export const BookSearch = ({setIsUpdated}) => {
   return (
     <div className="search-books">
     <div className="search-books-bar">
-      <a
+      <button
         className="close-search"
         onClick={() => navigate("/")}
       >
         Close
-      </a>
+      </button>
       <div className="search-books-input-wrapper">
         <input
           value={searchTerm}

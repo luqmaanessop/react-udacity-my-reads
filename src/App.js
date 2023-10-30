@@ -27,7 +27,7 @@ function App() {
           <>
             <BookShelf books={books} setIsUpdated={setIsUpdated}/>
             <div className="open-search">
-              <a onClick={() => navigate("/search")}>Add a book</a>
+              <button onClick={() => navigate("/search")}>Add a book</button>
             </div>
           </>
         }

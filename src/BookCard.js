@@ -1,15 +1,10 @@
-
-import { useNavigate } from "react-router-dom";
 import * as BooksApi from './BooksAPI.js';
 
 
 export const BookCard = ({book, setIsUpdated}) => {
-  const navigate = useNavigate();
-
   const handleUpdate = (book, shelf) => {
+    // Invalidate UI after updating a book to cause a re-render
     BooksApi.update(book, shelf).then(() => setIsUpdated(true));
-
-    navigate("/")
   }
 
   return (
