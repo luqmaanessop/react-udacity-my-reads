@@ -1,15 +1,15 @@
 import { BookCard } from "./BookCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import * as BooksApi from './BooksAPI.js';
 import PropTypes from "prop-types";
+import { debounce } from 'lodash';
 
 
 export const BookSearch = ({setIsUpdated, books}) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [grandLibrary, setGrandLibrary] = useState([]);
   const [isMounted, setIsMounted] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     return () => {
@@ -18,43 +18,32 @@ export const BookSearch = ({setIsUpdated, books}) => {
     };
   }, []);
 
-  const handleOnChange = (e) => {
-    setSearchTerm(e.target.value);
-    clearTimeout(debouncedSearchTerm);
 
-    // Set a timeout to call the API after 500 milliseconds of user inactivity
-    const debounceTimeout = setTimeout(() => {
-      setDebouncedSearchTerm(e.target.value.toLowerCase());
-
+	const debouncedSearch = (
+		debounce((value) => {
       // Call the search function of the API - then check if any of the current books matches and update their current shelf value
-      isMounted &&
-        BooksApi.search(e.target.value.toLowerCase(), 10000).then((res) => {
-          if(res) {
-            const updatedSearchResults = res.length && res.length > 0 && res.map((searchResultBook) => {
-              const foundBook = books.find((book) => searchResultBook.id === book.id);
+      isMounted && BooksApi.search(value, 1000).then((res) => {
+        if(res) {
+          const updatedSearchResults = res.length && res.length > 0 && res.map((searchResultBook) => {
+            const foundBook = books.find((book) => searchResultBook.id === book.id);
 
-              if (foundBook) {
-                // If the book is found, update the shelf
-                return {
-                  ...searchResultBook,
-                  shelf: foundBook.shelf,
-                };
-              } else {
-                // If the book is not found, set the shelf to 'none'
-                return {
-                  ...searchResultBook,
-                  shelf: 'none',
-                };
-              }
-            });
-            updatedSearchResults && updatedSearchResults.length > 0 && setGrandLibrary(updatedSearchResults);
-          } else {
-            setGrandLibrary([])
-          }
-        })}
-    , 1000);
+            // If the book is found, update the shelf else set to 'none'
+            return {
+              ...searchResultBook,
+              shelf: foundBook ? foundBook.shelf : 'none',
+            };
+          });
+          updatedSearchResults && updatedSearchResults.length > 0 && setGrandLibrary(updatedSearchResults);
+        } else {
+          setGrandLibrary([])
+        }
+      })}, 1000) // will be created only once initially
+	);
 
-    setDebouncedSearchTerm(debounceTimeout);
+
+  const handleOnChange = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+    debouncedSearch(e.target.value.toLowerCase());
   };
 
   return (
