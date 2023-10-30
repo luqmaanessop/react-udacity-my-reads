@@ -30,7 +30,7 @@ export const BookCard = ({book, setIsUpdated}) => {
         <select value={book.shelf} onChange={(e) => {
           handleUpdate(book, e.target.value);
         }}>
-          <option value="none" disabled>
+          <option value="moveTo" disabled>
             Move to...
           </option>
           <option value="currentlyReading">
