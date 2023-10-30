@@ -7,6 +7,8 @@ export const BookCard = ({book, setIsUpdated}) => {
     BooksApi.update(book, shelf).then(() => setIsUpdated(true));
   }
 
+  const bookImage = book['imageLinks'] && book['imageLinks'].thumbnail ? book['imageLinks'].thumbnail : 'https://picsum.photos/id/870/200/300?grayscale&blur=2';
+
   return (
   <div className="book">
     <div className="book-top">
@@ -17,7 +19,7 @@ export const BookCard = ({book, setIsUpdated}) => {
           height: 192,
         }}
       >
-        <img src={book['imageLinks'].thumbnail} alt={book.title}
+        <img src={bookImage} alt={book.title}
         style={{
           width: 128,
           height: 192,
