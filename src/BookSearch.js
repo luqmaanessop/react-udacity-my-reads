@@ -2,6 +2,7 @@ import { BookCard } from "./BookCard";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import * as BooksApi from './BooksAPI.js';
+import PropTypes from "prop-types";
 
 
 export const BookSearch = ({setIsUpdated, books}) => {
@@ -84,3 +85,8 @@ export const BookSearch = ({setIsUpdated, books}) => {
   </div>
   )
 }
+
+BookSearch.propTypes = {
+  books: PropTypes.array.isRequired,
+  setIsUpdated: PropTypes.func.isRequired,
+};

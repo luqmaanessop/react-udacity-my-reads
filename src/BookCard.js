@@ -1,5 +1,5 @@
 import * as BooksApi from './BooksAPI.js';
-
+import PropTypes from "prop-types";
 export const BookCard = ({book, setIsUpdated}) => {
   const handleUpdate = (book, shelf) => {
     // Invalidate UI after updating a book to cause a re-render
@@ -47,3 +47,8 @@ export const BookCard = ({book, setIsUpdated}) => {
     <div className="book-authors">{book.authors}</div>
   </div>)
 }
+
+BookCard.propTypes = {
+  book: PropTypes.object.isRequired,
+  setIsUpdated: PropTypes.func.isRequired,
+};
