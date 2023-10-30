@@ -20,7 +20,7 @@ export const BookSearch = ({setIsUpdated, books}) => {
 
 
 	const debouncedSearch = (
-		debounce((value) => {
+		useCallback(debounce((value) => {
       // Call the search function of the API - then check if any of the current books matches and update their current shelf value
       isMounted && BooksApi.search(value, 1000).then((res) => {
         if(res) {
@@ -37,7 +37,8 @@ export const BookSearch = ({setIsUpdated, books}) => {
         } else {
           setGrandLibrary([])
         }
-      })}, 1000) // will be created only once initially
+      })
+    }),[isMounted, books], 1000) // will be created only once initially
 	);
 
 
