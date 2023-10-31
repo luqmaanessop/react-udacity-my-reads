@@ -11,6 +11,7 @@ function App() {
 
   const handleUpdate = (book, shelf) => {
     // Invalidate UI after updating a book to cause a re-render
+    book.shelf = shelf;
     BooksApi.update(book, shelf).then(() => setBooks([...books.filter((b) => b.id !== book.id), book]));
   }
 
