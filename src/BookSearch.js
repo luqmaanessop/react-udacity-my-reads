@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { debounce } from 'lodash';
 
 
-export const BookSearch = ({setIsUpdated, books, handleUpdate}) => {
+export const BookSearch = ({books, handleUpdate}) => {
   const [grandLibrary, setGrandLibrary] = useState([]);
   const [isMounted, setIsMounted] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -69,7 +69,7 @@ export const BookSearch = ({setIsUpdated, books, handleUpdate}) => {
     </div>
     <div className="search-books-results">
       <ol className="books-grid">
-      { grandLibrary && grandLibrary.length > 0 ? grandLibrary.map(book => <BookCard key={book.id} book={book} setIsUpdated={setIsUpdated} handleUpdate={handleUpdate} />) : <p>No results found... Try another search</p>}
+      { grandLibrary && grandLibrary.length > 0 ? grandLibrary.map(book => <BookCard key={book.id} book={book} handleUpdate={handleUpdate} />) : <p>No results found... Try another search</p>}
       </ol>
     </div>
   </div>
@@ -78,5 +78,5 @@ export const BookSearch = ({setIsUpdated, books, handleUpdate}) => {
 
 BookSearch.propTypes = {
   books: PropTypes.array.isRequired,
-  setIsUpdated: PropTypes.func.isRequired,
+  handleUpdate: PropTypes.func.isRequired,
 };

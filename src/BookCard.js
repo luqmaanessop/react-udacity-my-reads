@@ -45,5 +45,5 @@ export const BookCard = ({book, handleUpdate}) => {
 
 BookCard.propTypes = {
   book: PropTypes.object.isRequired,
-  setIsUpdated: PropTypes.func.isRequired,
+  handleUpdate: PropTypes.func.isRequired,
 };
