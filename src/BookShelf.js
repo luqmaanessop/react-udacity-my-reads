@@ -1,7 +1,7 @@
 import { BookCard } from "./BookCard";
 import PropTypes from "prop-types";
 
-export const BookShelf = ({books, setIsUpdated}) => {
+export const BookShelf = ({books, setIsUpdated, handleUpdate}) => {
 
   return (
   <div className="list-books">
@@ -16,7 +16,7 @@ export const BookShelf = ({books, setIsUpdated}) => {
                 <ol className="books-grid">
                   {books.map((book) => (
                     book.shelf === 'currentlyReading' &&
-                    <BookCard key={book.id} book={book} setIsUpdated={setIsUpdated}/>
+                    <BookCard key={book.id} book={book} setIsUpdated={setIsUpdated} handleUpdate={handleUpdate}/>
                   ))}
                 </ol>
               </div>
@@ -24,14 +24,14 @@ export const BookShelf = ({books, setIsUpdated}) => {
                 <ol className="books-grid">
                   {books.map((book) => (
                     book.shelf === 'wantToRead' &&
-                    <BookCard key={book.id} book={book} setIsUpdated={setIsUpdated}/>
+                    <BookCard key={book.id} book={book} setIsUpdated={setIsUpdated} handleUpdate={handleUpdate}/>
                   ))}
                 </ol>
               <h2 className="bookshelf-title">Read</h2>
                 <ol className="books-grid">
                   {books.map((book) => (
                     book.shelf === 'read' &&
-                    <BookCard key={book.id} book={book} setIsUpdated={setIsUpdated}/>
+                    <BookCard key={book.id} book={book} setIsUpdated={setIsUpdated} handleUpdate={handleUpdate}/>
                   ))}
                 </ol>
             </div>

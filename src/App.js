@@ -10,6 +10,11 @@ function App() {
   const [books, setBooks] = useState([]);
   const [isUpdated, setIsUpdated] = useState(false);
 
+  const handleUpdate = (book, shelf) => {
+    // Invalidate UI after updating a book to cause a re-render
+    BooksApi.update(book, shelf).then(() => setIsUpdated(true));
+  }
+
   useEffect(() => {
     BooksApi.getAll().then((res) => {
       setBooks(res)
@@ -25,7 +30,7 @@ function App() {
         path="/"
         element={
           <>
-            <BookShelf books={books} setIsUpdated={setIsUpdated}/>
+            <BookShelf books={books} setIsUpdated={setIsUpdated} handleUpdate={handleUpdate}/>
             <Link className="open-search" to="/search">Open search</Link>
           </>
         }
@@ -33,7 +38,7 @@ function App() {
       <Route
         path="/search"
         element={
-          <BookSearch books={books} setIsUpdated={setIsUpdated}/>
+          <BookSearch books={books} setIsUpdated={setIsUpdated} handleUpdate={handleUpdate}/>
         }
       />
     </Routes>

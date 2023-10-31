@@ -1,10 +1,5 @@
-import * as BooksApi from './BooksAPI.js';
 import PropTypes from "prop-types";
-export const BookCard = ({book, setIsUpdated}) => {
-  const handleUpdate = (book, shelf) => {
-    // Invalidate UI after updating a book to cause a re-render
-    BooksApi.update(book, shelf).then(() => setIsUpdated(true));
-  }
+export const BookCard = ({book, handleUpdate}) => {
 
   const bookImage = book['imageLinks'] && book['imageLinks'].thumbnail ? book['imageLinks'].thumbnail : 'https://picsum.photos/id/870/200/300?grayscale&blur=2';
 
