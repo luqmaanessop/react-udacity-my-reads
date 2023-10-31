@@ -1,5 +1,5 @@
 import { BookCard } from "./BookCard";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import * as BooksApi from './BooksAPI.js';
 import PropTypes from "prop-types";
@@ -20,7 +20,7 @@ export const BookSearch = ({setIsUpdated, books}) => {
 
 
 	const debouncedSearch = (
-		useCallback(debounce((value) => {
+		useMemo(() => debounce((value) => {
       // Call the search function of the API - then check if any of the current books matches and update their current shelf value
       isMounted && BooksApi.search(value, 1000).then((res) => {
         if(res) {
@@ -38,7 +38,7 @@ export const BookSearch = ({setIsUpdated, books}) => {
           setGrandLibrary([])
         }
       })
-    }),[isMounted, books], 1000) // will be created only once initially
+    }),[isMounted, books], 1000)
 	);
 
 
