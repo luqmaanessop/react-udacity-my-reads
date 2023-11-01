@@ -19,7 +19,7 @@ function App() {
     BooksApi.getAll().then((res) => {
       setBooks(res)
     });
-  }, [books])
+  }, [])
 
   return (
     <Routes>
